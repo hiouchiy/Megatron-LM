@@ -357,7 +357,7 @@ class GPTDataset(MegatronDataset):
         print(torch.distributed.get_rank(), torch.distributed.get_rank())
         if not path_to_cache or (
             not cache_hit
-            and (not torch.distributed.is_initialized() or torch.distributed.get_rank() == 0)
+            and (not torch.distributed.is_initialized() or torch.distributed.get_rank() == 0 or torch.distributed.get_rank() == 8)
         ):
             print('中です')
             log_single_rank(
