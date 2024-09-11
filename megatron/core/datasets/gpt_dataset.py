@@ -320,12 +320,14 @@ class GPTDataset(MegatronDataset):
         Returns:
             Tuple[numpy.ndarray, numpy.ndarray]: The document index, the sample index, and the shuffle index
         """
+        print(torch.distributed.get_rank(), self.config.path_to_cache)
+        print(torch.distributed.get_rank(), self.config.mock)
         path_to_cache = self.config.path_to_cache
         if path_to_cache is None and not self.config.mock:
             path_to_cache = os.path.join(
                 self.dataset.path_prefix, "cache", f"{type(self).__name__}_indices"
             )
-
+        print(torch.distributed.get_rank(), path_to_cache)
         if path_to_cache:
             get_path_to = lambda suffix: os.path.join(
                 path_to_cache,
@@ -348,12 +350,16 @@ class GPTDataset(MegatronDataset):
             )
         else:
             cache_hit = False
+        print(torch.distributed.get_rank(), path_to_cache)
 
+        print(torch.distributed.get_rank(), cache_hit)
+        print(torch.distributed.get_rank(), torch.distributed.is_initialized())
+        print(torch.distributed.get_rank(), torch.distributed.get_rank())
         if not path_to_cache or (
             not cache_hit
             and (not torch.distributed.is_initialized() or torch.distributed.get_rank() == 0)
         ):
-
+            print('中です')
             log_single_rank(
                 logger,
                 logging.INFO,
